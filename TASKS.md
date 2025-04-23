@@ -20,9 +20,9 @@
 ## Documentation
 - [x] Complete API documentation with examples
 - [x] Add more detailed usage examples for each client type
-- [ ] Create tutorials for common Redis use cases
 - [ ] Document best practices for Redis client configuration
 - [ ] Add migration guide for switching between client libraries
+- [ ] Add a GitHub Action to lint and report all Markdown
 
 ## Build & CI/CD
 - [x] Set up continuous integration with GitHub Actions
@@ -36,6 +36,7 @@
 - [ ] Create release notes for each version
 - [x] Set up automated documentation deployment
 - [ ] Create demo applications showcasing library usage
+- [ ] Evaluate the benefits of splitting the project into separate Gradle modules such as core, jedis, lettuce, r4j, etc.
 
 ## Future Enhancements
 - [ ] Add support for additional Redis client libraries
@@ -43,3 +44,13 @@
 - [ ] Add support for Redis Stack modules (RedisJSON, RediSearch, etc.)
 - [ ] Create Spring Boot starter for easy integration
 - [ ] Develop Kotlin coroutines support for asynchronous operations
+- [ ] Add resilience4j integration for fault tolerance
+  - [x] Add resilience4j as an optional dependency
+  - [x] Create a resilience module interface for wrapping Redis clients
+  - [x] Implement circuit breaker integration
+  - [ ] Implement retry integration
+  - [ ] Implement time limiter integration
+  - [ ] Implement bulkhead integration
+  - [ ] Implement rate limiter integration
+  - [ ] Update builder interfaces to support resilience4j configuration
+  - [ ] Create comprehensive documentation with examples

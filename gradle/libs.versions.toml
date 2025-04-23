@@ -6,6 +6,7 @@ mockk = "1.13.9" # Latest version as of January 2024
 testcontainers = "1.19.3" # Latest version as of January 2024
 ktlint = "11.6.1" # Latest version as of May 2024
 detekt = "1.23.4" # Latest version as of May 2024
+resilience4j = "2.2.0" # Latest version as of May 2024
 
 [libraries]
 jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
@@ -15,6 +16,12 @@ junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref 
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
 testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
+resilience4j-circuitbreaker = { module = "io.github.resilience4j:resilience4j-circuitbreaker", version.ref = "resilience4j" }
+resilience4j-retry = { module = "io.github.resilience4j:resilience4j-retry", version.ref = "resilience4j" }
+resilience4j-timelimiter = { module = "io.github.resilience4j:resilience4j-timelimiter", version.ref = "resilience4j" }
+resilience4j-bulkhead = { module = "io.github.resilience4j:resilience4j-bulkhead", version.ref = "resilience4j" }
+resilience4j-ratelimiter = { module = "io.github.resilience4j:resilience4j-ratelimiter", version.ref = "resilience4j" }
+resilience4j-core = { module = "io.github.resilience4j:resilience4j-core", version.ref = "resilience4j" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "1.9.22" } # Updated from 2.1.20 to the latest stable version

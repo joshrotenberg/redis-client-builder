@@ -7,6 +7,8 @@ import com.joshrotenberg.redis.client.builder.jedis.JedisSentinelClientBuilder
 import com.joshrotenberg.redis.client.builder.jedis.UnifiedJedisClientBuilder
 import com.joshrotenberg.redis.client.builder.lettuce.LettuceClientBuilder
 import com.joshrotenberg.redis.client.builder.lettuce.LettuceClusterClientBuilder
+import com.joshrotenberg.redis.client.builder.resilience.RedisCircuitBreaker
+import com.joshrotenberg.redis.client.builder.resilience.RedisCircuitBreakerImpl
 import io.lettuce.core.RedisClient
 import io.lettuce.core.cluster.RedisClusterClient
 import redis.clients.jedis.JedisCluster
@@ -123,4 +125,13 @@ object RedisClientBuilderFactory {
             JedisSentinelPool::class.java.isAssignableFrom(type) -> jedisSentinel()
             else -> throw IllegalArgumentException("Unsupported Redis sentinel client type: ${type.name}")
         }
+
+    /**
+     * Creates a new RedisCircuitBreaker instance.
+     *
+     * @param T The type of Redis client that will be wrapped
+     * @return A new RedisCircuitBreaker instance
+     */
+    @JvmStatic
+    fun <T> circuitBreaker(): RedisCircuitBreaker<T> = RedisCircuitBreakerImpl.create()
 }

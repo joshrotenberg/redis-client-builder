@@ -16,6 +16,14 @@ dependencies {
     compileOnly(libs.jedis)
     compileOnly(libs.lettuce.core)
 
+    // Resilience4j libraries - marked as compileOnly so they're optional dependencies
+    compileOnly(libs.resilience4j.core)
+    compileOnly(libs.resilience4j.circuitbreaker)
+    compileOnly(libs.resilience4j.retry)
+    compileOnly(libs.resilience4j.timelimiter)
+    compileOnly(libs.resilience4j.bulkhead)
+    compileOnly(libs.resilience4j.ratelimiter)
+
     // Testing
     testImplementation(kotlin("test"))
     testImplementation(libs.junit.api)
@@ -27,6 +35,12 @@ dependencies {
     // For tests, we need the actual implementations
     testImplementation(libs.jedis)
     testImplementation(libs.lettuce.core)
+    testImplementation(libs.resilience4j.core)
+    testImplementation(libs.resilience4j.circuitbreaker)
+    testImplementation(libs.resilience4j.retry)
+    testImplementation(libs.resilience4j.timelimiter)
+    testImplementation(libs.resilience4j.bulkhead)
+    testImplementation(libs.resilience4j.ratelimiter)
 }
 
 tasks.test {
