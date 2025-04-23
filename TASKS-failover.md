@@ -3,9 +3,9 @@
 ## Core Functionality
 
 ### 1. Create Failover Module Structure
-- [ ] Create a `redis-client-builder-failover` module for the failover feature
-- [ ] Set up proper dependencies in build.gradle.kts
-- [ ] Configure the module to be optional to avoid unnecessary dependencies
+- [x] Create a `redis-client-builder-failover` module for the failover feature
+- [x] Set up proper dependencies in build.gradle.kts
+- [x] Configure the module to be optional to avoid unnecessary dependencies
 
 ### 2. Define Core Interfaces in Core Module
 - [ ] Create `RedisHealthCheck` interface in core module

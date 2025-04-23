@@ -7,6 +7,7 @@ testcontainers = "1.19.3" # Latest version as of January 2024
 ktlint = "11.6.1" # Latest version as of May 2024
 detekt = "1.23.4" # Latest version as of May 2024
 resilience4j = "2.2.0" # Latest version as of May 2024
+guava = "33.0.0-jre" # Latest version as of May 2024
 
 [libraries]
 jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
@@ -22,6 +23,7 @@ resilience4j-timelimiter = { module = "io.github.resilience4j:resilience4j-timel
 resilience4j-bulkhead = { module = "io.github.resilience4j:resilience4j-bulkhead", version.ref = "resilience4j" }
 resilience4j-ratelimiter = { module = "io.github.resilience4j:resilience4j-ratelimiter", version.ref = "resilience4j" }
 resilience4j-core = { module = "io.github.resilience4j:resilience4j-core", version.ref = "resilience4j" }
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "1.9.22" } # Updated from 2.1.20 to the latest stable version
