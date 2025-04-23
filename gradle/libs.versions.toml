@@ -1,0 +1,19 @@
+[versions]
+jedis = "5.1.0"
+lettuce = "6.3.0.RELEASE"
+redisson = "3.25.0"
+junit = "5.10.1"
+mockk = "1.13.9"
+testcontainers = "1.19.3"
+
+[libraries]
+jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
+lettuce-core = { module = "io.lettuce:lettuce-core", version.ref = "lettuce" }
+junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit" }
+junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
+testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.1.20" }

@@ -1,0 +1,40 @@
+site_name: Redis Client Builder
+site_description: A fluent API for building Redis client instances in Kotlin with first-class Java support
+site_author: Josh Rotenberg
+repo_url: https://github.com/joshrotenberg/redis-client-builder
+repo_name: joshrotenberg/redis-client-builder
+
+theme:
+  name: material
+  palette:
+    primary: red
+    accent: red
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.expand
+    - navigation.indexes
+    - content.code.copy
+    - content.code.annotate
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Clients:
+    - Jedis: clients/jedis.md
+    - UnifiedJedis: clients/unified-jedis.md
+    - Lettuce: clients/lettuce.md
+  - API Reference: api-reference.md
+  - Contributing: contributing.md
