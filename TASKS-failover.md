@@ -8,20 +8,20 @@
 - [x] Configure the module to be optional to avoid unnecessary dependencies
 
 ### 2. Define Core Interfaces in Core Module
-- [ ] Create `RedisHealthCheck` interface in core module
-  - [ ] Define methods for health check execution
-  - [ ] Define methods for health status reporting
-  - [ ] Define methods for configuration (timeout, retry, etc.)
-- [ ] Create `RedisHealthCheckRegistry` interface for managing multiple health checks
-  - [ ] Define methods for registering/unregistering health checks
-  - [ ] Define methods for querying health check status
-- [ ] Create `RedisEndpointManager` interface for managing Redis endpoints
-  - [ ] Define methods for adding/removing endpoints
-  - [ ] Define methods for querying endpoint status
-  - [ ] Define methods for selecting healthy endpoints
-- [ ] Create `RedisFailoverManager` interface as the main entry point
-  - [ ] Define methods for configuration
-  - [ ] Define methods for integration with client builders
+- [x] Create `RedisHealthCheck` interface in core module
+  - [x] Define methods for health check execution
+  - [x] Define methods for health status reporting
+  - [x] Define methods for configuration (timeout, retry, etc.)
+- [x] Create `RedisHealthCheckRegistry` interface for managing multiple health checks
+  - [x] Define methods for registering/unregistering health checks
+  - [x] Define methods for querying health check status
+- [x] Create `RedisEndpointManager` interface for managing Redis endpoints
+  - [x] Define methods for adding/removing endpoints
+  - [x] Define methods for querying endpoint status
+  - [x] Define methods for selecting healthy endpoints
+- [x] Create `RedisFailoverManager` interface as the main entry point
+  - [x] Define methods for configuration
+  - [x] Define methods for integration with client builders
 
 ### 3. Implement Health Check Framework
 - [ ] Implement `AbstractRedisHealthCheck` base class using Guava's AbstractScheduledService
