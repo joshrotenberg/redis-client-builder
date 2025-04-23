@@ -38,6 +38,43 @@
 - [ ] Create demo applications showcasing library usage
 - [ ] Evaluate the benefits of splitting the project into separate Gradle modules such as core, jedis, lettuce, r4j, etc.
 
+## Project Modularization
+The following steps outline how to modularize the project into separate Gradle modules:
+
+1. **Create Module Structure**
+   - [ ] Create a `redis-client-builder-core` module for base interfaces and common code
+   - [ ] Create a `redis-client-builder-jedis` module for Jedis implementation
+   - [ ] Create a `redis-client-builder-lettuce` module for Lettuce implementation
+   - [ ] Create a `redis-client-builder-resilience4j` module for resilience4j integration
+
+2. **Update Gradle Configuration**
+   - [ ] Modify `settings.gradle.kts` to include all modules
+   - [ ] Create individual `build.gradle.kts` files for each module
+   - [ ] Set up proper dependencies between modules
+   - [ ] Configure common build logic in a convention plugin or buildSrc
+
+3. **Refactor Code**
+   - [ ] Move core interfaces to the core module
+   - [ ] Move Jedis implementation to the jedis module
+   - [ ] Move Lettuce implementation to the lettuce module
+   - [ ] Move resilience4j integration to the resilience4j module
+   - [ ] Update imports across all modules
+
+4. **Update Tests**
+   - [ ] Reorganize tests to match the new module structure
+   - [ ] Create shared test utilities in a test-common module if needed
+   - [ ] Ensure all tests pass with the new structure
+
+5. **Update Documentation and Examples**
+   - [ ] Update README.md to reflect the new modular structure
+   - [ ] Update usage examples to show how to include specific modules
+   - [ ] Document the dependency relationships between modules
+
+6. **Configure Publishing**
+   - [ ] Set up Maven publishing for each module
+   - [ ] Configure proper POM metadata for each module
+   - [ ] Ensure artifacts include sources and javadoc
+
 ## Future Enhancements
 - [ ] Add support for additional Redis client libraries
 - [ ] Implement reactive client support
