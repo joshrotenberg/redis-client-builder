@@ -4,9 +4,9 @@
 - [x] Add support for Redis Cluster configuration
   - [x] Extend builders to support cluster configuration
   - [x] Add documentation for cluster configuration
-- [ ] Add support for Redis Sentinel configuration
-  - [ ] Extend builders to support sentinel configuration
-  - [ ] Add documentation for sentinel configuration
+- [x] Add support for Redis Sentinel configuration
+  - [x] Extend builders to support sentinel configuration
+  - [x] Add documentation for sentinel configuration
 - [x] Implement connection pooling options for all client libraries
 - [x] Add support for SSL/TLS configuration with custom certificates
 
