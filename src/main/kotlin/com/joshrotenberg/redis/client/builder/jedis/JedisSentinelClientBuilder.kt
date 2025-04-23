@@ -1,7 +1,6 @@
 package com.joshrotenberg.redis.client.builder.jedis
 
 import com.joshrotenberg.redis.client.builder.RedisSentinelClientBuilder
-import redis.clients.jedis.JedisPool
 import redis.clients.jedis.JedisPoolConfig
 import redis.clients.jedis.JedisSentinelPool
 import redis.clients.jedis.Protocol

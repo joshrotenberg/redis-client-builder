@@ -16,7 +16,7 @@ class UnifiedJedisClientBuilderTest {
         val unifiedJedis = builder.build()
         assertNotNull(unifiedJedis)
         assertTrue(unifiedJedis is UnifiedJedis)
-        
+
         // Close the connection to avoid resource leaks
         unifiedJedis.close()
     }
@@ -51,7 +51,7 @@ class UnifiedJedisClientBuilderTest {
         val unifiedJedis = builder.build()
         assertNotNull(unifiedJedis)
         assertTrue(unifiedJedis is UnifiedJedis)
-        
+
         // Close the connection to avoid resource leaks
         unifiedJedis.close()
 
@@ -59,41 +59,41 @@ class UnifiedJedisClientBuilderTest {
         // because it's just testing the builder configuration, not the connection.
         // For connection tests, see the integration tests.
     }
-    
+
     @Test
     fun testUriConfiguration() {
         // Test that the builder can be created and configured with a URI
         val uri = URI.create("redis://localhost:6379/0")
-        
+
         val builder = UnifiedJedisClientBuilder.create()
             .uri(uri)
-            
+
         assertNotNull(builder)
-        
+
         // Test that the build method returns a non-null UnifiedJedis instance
         val unifiedJedis = builder.build()
         assertNotNull(unifiedJedis)
         assertTrue(unifiedJedis is UnifiedJedis)
-        
+
         // Close the connection to avoid resource leaks
         unifiedJedis.close()
     }
-    
+
     @Test
     fun testUriStringConfiguration() {
         // Test that the builder can be created and configured with a URI string
         val uriString = "redis://localhost:6379/0"
-        
+
         val builder = UnifiedJedisClientBuilder.create()
             .uri(uriString)
-            
+
         assertNotNull(builder)
-        
+
         // Test that the build method returns a non-null UnifiedJedis instance
         val unifiedJedis = builder.build()
         assertNotNull(unifiedJedis)
         assertTrue(unifiedJedis is UnifiedJedis)
-        
+
         // Close the connection to avoid resource leaks
         unifiedJedis.close()
     }

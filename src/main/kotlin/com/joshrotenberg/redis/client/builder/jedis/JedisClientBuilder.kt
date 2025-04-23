@@ -193,7 +193,7 @@ class JedisClientBuilder : RedisClientBuilder<JedisPool> {
             ssl,
             null, // sslSocketFactory
             null, // sslParameters
-            null, // hostnameVerifier
+            null // hostnameVerifier
         )
     }
 

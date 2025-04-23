@@ -38,32 +38,32 @@ class LettuceIntegrationTest : RedisContainerTest() {
     @Test
     fun testLettuceConnection() {
         // Test basic Redis operations
-        
+
         // Test SET and GET
         val key = "test:lettuce:key"
         val value = "Hello, Lettuce!"
         syncCommands.set(key, value)
         val retrievedValue = syncCommands.get(key)
         assertEquals(value, retrievedValue, "Retrieved value should match the set value")
-        
+
         // Test EXISTS
         assertTrue(syncCommands.exists(key) > 0, "Key should exist after setting a value")
-        
+
         // Test DEL
         syncCommands.del(key)
         assertEquals(0, syncCommands.exists(key), "Key should not exist after deletion")
-        
+
         // Test INCR
         val counterKey = "test:lettuce:counter"
         syncCommands.set(counterKey, "0")
         val newValue = syncCommands.incr(counterKey)
         assertEquals(1, newValue, "Counter should be incremented to 1")
-        
+
         // Test EXPIRE and TTL
         syncCommands.expire(counterKey, 10)
         val ttl = syncCommands.ttl(counterKey)
         assertTrue(ttl > 0 && ttl <= 10, "TTL should be between 0 and 10 seconds")
-        
+
         // Clean up
         syncCommands.del(counterKey)
     }
@@ -73,7 +73,7 @@ class LettuceIntegrationTest : RedisContainerTest() {
         // Close the default connection and client
         connection.close()
         redisClient.shutdown()
-        
+
         // Create a RedisClient with custom configuration
         redisClient = RedisClientBuilderFactory.lettuce()
             .host(redisHost)
@@ -89,14 +89,14 @@ class LettuceIntegrationTest : RedisContainerTest() {
         // Get a new connection and commands
         connection = redisClient.connect()
         syncCommands = connection.sync()
-        
+
         // Verify that we can use the connection
         val key = "test:lettuce:custom:config"
         val value = "Custom configuration works!"
         syncCommands.set(key, value)
         val retrievedValue = syncCommands.get(key)
         assertEquals(value, retrievedValue)
-        
+
         // Clean up
         syncCommands.del(key)
     }

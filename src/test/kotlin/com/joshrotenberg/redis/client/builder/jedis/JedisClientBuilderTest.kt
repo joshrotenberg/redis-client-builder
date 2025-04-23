@@ -3,7 +3,6 @@ package com.joshrotenberg.redis.client.builder.jedis
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import redis.clients.jedis.JedisPool
-import redis.clients.jedis.JedisPoolConfig
 
 class JedisClientBuilderTest {
     @Test

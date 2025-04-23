@@ -55,13 +55,15 @@ ktlint {
         include("**/kotlin/**")
     }
     // Disable some rules that might be too strict for existing code
-    disabledRules.set(listOf(
-        "no-wildcard-imports",
-        "filename",
-        "final-newline",
-        "max-line-length",
-        "import-ordering"
-    ))
+    disabledRules.set(
+        listOf(
+            "no-wildcard-imports",
+            "filename",
+            "final-newline",
+            "max-line-length",
+            "import-ordering"
+        )
+    )
     // Only apply to new code
     baseline.set(file("$projectDir/config/ktlint/baseline.xml"))
 }
