@@ -1,5 +1,11 @@
 package com.joshrotenberg.redis.client.builder
 
+import com.joshrotenberg.redis.client.builder.resilience.RedisBulkhead
+import com.joshrotenberg.redis.client.builder.resilience.RedisCircuitBreaker
+import com.joshrotenberg.redis.client.builder.resilience.RedisRateLimiter
+import com.joshrotenberg.redis.client.builder.resilience.RedisRetry
+import com.joshrotenberg.redis.client.builder.resilience.RedisTimeLimiter
+
 /**
  * Common interface for all Redis sentinel client builders.
  * This interface defines the common methods and properties that all Redis sentinel client builders should support,
@@ -64,6 +70,51 @@ interface RedisSentinelClientBuilder<T> {
      * @return This builder instance
      */
     fun ssl(useSSL: Boolean): RedisSentinelClientBuilder<T>
+
+    /**
+     * Configures a circuit breaker for the Redis sentinel client.
+     * The provided function will be used to configure the circuit breaker.
+     *
+     * @param configurer A function that configures the circuit breaker
+     * @return This builder instance
+     */
+    fun withCircuitBreaker(configurer: (RedisCircuitBreaker<T>) -> RedisCircuitBreaker<T>): RedisSentinelClientBuilder<T>
+
+    /**
+     * Configures a retry mechanism for the Redis sentinel client.
+     * The provided function will be used to configure the retry mechanism.
+     *
+     * @param configurer A function that configures the retry mechanism
+     * @return This builder instance
+     */
+    fun withRetry(configurer: (RedisRetry<T>) -> RedisRetry<T>): RedisSentinelClientBuilder<T>
+
+    /**
+     * Configures a time limiter for the Redis sentinel client.
+     * The provided function will be used to configure the time limiter.
+     *
+     * @param configurer A function that configures the time limiter
+     * @return This builder instance
+     */
+    fun withTimeLimiter(configurer: (RedisTimeLimiter<T>) -> RedisTimeLimiter<T>): RedisSentinelClientBuilder<T>
+
+    /**
+     * Configures a bulkhead for the Redis sentinel client.
+     * The provided function will be used to configure the bulkhead.
+     *
+     * @param configurer A function that configures the bulkhead
+     * @return This builder instance
+     */
+    fun withBulkhead(configurer: (RedisBulkhead<T>) -> RedisBulkhead<T>): RedisSentinelClientBuilder<T>
+
+    /**
+     * Configures a rate limiter for the Redis sentinel client.
+     * The provided function will be used to configure the rate limiter.
+     *
+     * @param configurer A function that configures the rate limiter
+     * @return This builder instance
+     */
+    fun withRateLimiter(configurer: (RedisRateLimiter<T>) -> RedisRateLimiter<T>): RedisSentinelClientBuilder<T>
 
     /**
      * Builds and returns the Redis client instance configured with sentinel support.

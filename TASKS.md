@@ -48,9 +48,9 @@
   - [x] Add resilience4j as an optional dependency
   - [x] Create a resilience module interface for wrapping Redis clients
   - [x] Implement circuit breaker integration
-  - [ ] Implement retry integration
-  - [ ] Implement time limiter integration
-  - [ ] Implement bulkhead integration
-  - [ ] Implement rate limiter integration
-  - [ ] Update builder interfaces to support resilience4j configuration
+  - [x] Implement retry integration
+  - [x] Implement time limiter integration
+  - [x] Implement bulkhead integration
+  - [x] Implement rate limiter integration
+  - [x] Update builder interfaces to support resilience4j configuration
   - [ ] Create comprehensive documentation with examples
