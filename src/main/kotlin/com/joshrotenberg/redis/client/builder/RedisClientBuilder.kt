@@ -1,5 +1,7 @@
 package com.joshrotenberg.redis.client.builder
 
+import com.joshrotenberg.redis.client.builder.failover.RedisFailoverManager
+import com.joshrotenberg.redis.client.builder.failover.RedisHealthCheck
 import com.joshrotenberg.redis.client.builder.resilience.RedisBulkhead
 import com.joshrotenberg.redis.client.builder.resilience.RedisCircuitBreaker
 import com.joshrotenberg.redis.client.builder.resilience.RedisRateLimiter
@@ -114,6 +116,42 @@ interface RedisClientBuilder<T> {
      * @return This builder instance
      */
     fun withRateLimiter(configurer: (RedisRateLimiter<T>) -> RedisRateLimiter<T>): RedisClientBuilder<T>
+
+    /**
+     * Configures a failover manager for the Redis client.
+     * The provided function will be used to configure the failover manager.
+     *
+     * @param configurer A function that configures the failover manager
+     * @return This builder instance
+     */
+    fun withFailover(configurer: (RedisFailoverManager) -> RedisFailoverManager): RedisClientBuilder<T>
+
+    /**
+     * Adds a Redis endpoint to be managed for failover.
+     *
+     * @param host The Redis endpoint host
+     * @param port The Redis endpoint port
+     * @return This builder instance
+     */
+    fun addEndpoint(host: String, port: Int): RedisClientBuilder<T>
+
+    /**
+     * Registers a health check for a specific Redis endpoint.
+     *
+     * @param host The Redis endpoint host
+     * @param port The Redis endpoint port
+     * @param healthCheck The health check to register
+     * @return This builder instance
+     */
+    fun registerHealthCheck(host: String, port: Int, healthCheck: RedisHealthCheck): RedisClientBuilder<T>
+
+    /**
+     * Sets the endpoint selection strategy for failover.
+     *
+     * @param strategy The selection strategy to use
+     * @return This builder instance
+     */
+    fun setSelectionStrategy(strategy: RedisFailoverManager.EndpointSelectionStrategy): RedisClientBuilder<T>
 
     /**
      * Builds and returns the Redis client instance.

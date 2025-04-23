@@ -24,47 +24,47 @@
   - [x] Define methods for integration with client builders
 
 ### 3. Implement Health Check Framework
-- [ ] Implement `AbstractRedisHealthCheck` base class using Guava's AbstractScheduledService
-  - [ ] Implement scheduling configuration
-  - [ ] Implement execution context management
-  - [ ] Implement metrics collection
-- [ ] Implement common health check types
-  - [ ] Implement `PingHealthCheck` for basic connectivity testing
-  - [ ] Implement `CommandHealthCheck` for testing specific Redis commands
-  - [ ] Implement `HttpHealthCheck` for testing HTTP endpoints
-  - [ ] Implement `CompositeHealthCheck` for combining multiple checks
+- [x] Implement `AbstractRedisHealthCheck` base class using Guava's AbstractScheduledService
+  - [x] Implement scheduling configuration
+  - [x] Implement execution context management
+  - [x] Implement metrics collection
+- [x] Implement common health check types
+  - [x] Implement `PingHealthCheck` for basic connectivity testing
+  - [x] Implement `CommandHealthCheck` for testing specific Redis commands
+  - [x] Implement `HttpHealthCheck` for testing HTTP endpoints
+  - [x] Implement `CompositeHealthCheck` for combining multiple checks
 
 ### 4. Implement Endpoint Management
-- [ ] Implement `RedisEndpointManagerImpl` for tracking endpoint health
-  - [ ] Implement endpoint registration/deregistration
-  - [ ] Implement health status tracking
-  - [ ] Implement endpoint selection strategies
-- [ ] Implement endpoint selection strategies
-  - [ ] Implement round-robin selection
-  - [ ] Implement random selection
-  - [ ] Implement weighted selection based on response time
-  - [ ] Implement priority-based selection
+- [x] Implement `RedisEndpointManagerImpl` for tracking endpoint health
+  - [x] Implement endpoint registration/deregistration
+  - [x] Implement health status tracking
+  - [x] Implement endpoint selection strategies
+- [x] Implement endpoint selection strategies
+  - [x] Implement round-robin selection
+  - [x] Implement random selection
+  - [x] Implement weighted selection based on response time
+  - [x] Implement priority-based selection
 
 ### 5. Implement Event Notification System
-- [ ] Create event types for health check and failover events
-  - [ ] Define `HealthCheckEvent` hierarchy (started, completed, failed)
-  - [ ] Define `EndpointStatusChangeEvent` for endpoint status changes
-  - [ ] Define `FailoverEvent` for failover actions
-- [ ] Implement event publishing mechanism
-  - [ ] Create event bus for distributing events
-  - [ ] Implement event listener registration
-- [ ] Implement metrics collection for health checks
-  - [ ] Track response times
-  - [ ] Track success/failure rates
-  - [ ] Track failover frequency
+- [x] Create event types for health check and failover events
+  - [x] Define `HealthCheckEvent` hierarchy (started, completed, failed)
+  - [x] Define `EndpointStatusChangeEvent` for endpoint status changes
+  - [x] Define `FailoverEvent` for failover actions
+- [x] Implement event publishing mechanism
+  - [x] Create event bus for distributing events
+  - [x] Implement event listener registration
+- [x] Implement metrics collection for health checks
+  - [x] Track response times
+  - [x] Track success/failure rates
+  - [x] Track failover frequency
 
 ### 6. Integrate with Client Builders
-- [ ] Extend `RedisClientBuilder` interface with failover support
-  - [ ] Add methods for configuring failover behavior
-  - [ ] Add methods for registering health checks
-- [ ] Implement failover-aware client builders
-  - [ ] Modify client creation to use healthy endpoints
-  - [ ] Implement dynamic endpoint switching
+- [x] Extend `RedisClientBuilder` interface with failover support
+  - [x] Add methods for configuring failover behavior
+  - [x] Add methods for registering health checks
+- [x] Implement failover-aware client builders
+  - [x] Modify client creation to use healthy endpoints
+  - [x] Implement dynamic endpoint switching
 
 ## Testing
 

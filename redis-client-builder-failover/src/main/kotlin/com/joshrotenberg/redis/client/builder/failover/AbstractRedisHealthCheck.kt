@@ -2,6 +2,7 @@ package com.joshrotenberg.redis.client.builder.failover
 
 import com.google.common.util.concurrent.AbstractScheduledService
 import com.google.common.util.concurrent.Service
+import com.joshrotenberg.redis.client.builder.failover.event.*
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
@@ -22,6 +23,25 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
     private var schedulePeriodMs: Long = DEFAULT_SCHEDULE_PERIOD_MS
     private var scheduleTimeUnit: TimeUnit = DEFAULT_SCHEDULE_TIME_UNIT
 
+    // Event bus for publishing events
+    private var eventBus: EventBus? = null
+    private var host: String? = null
+    private var port: Int? = null
+
+    /**
+     * Sets the event bus for this health check.
+     * This allows the health check to publish events when executed.
+     *
+     * @param eventBus the event bus to use
+     * @param host the host of the endpoint this health check is for
+     * @param port the port of the endpoint this health check is for
+     */
+    fun setEventBus(eventBus: EventBus, host: String, port: Int) {
+        this.eventBus = eventBus
+        this.host = host
+        this.port = port
+    }
+
     /**
      * Executes the health check and updates the health status.
      * This method is called by the scheduler.
@@ -30,8 +50,12 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
         val startTime = System.currentTimeMillis()
         lastExecutionTime.set(startTime)
 
+        // Publish health check started event
+        publishHealthCheckStartedEvent()
+
         var success = false
         var attempts = 0
+        var exception: Exception? = null
 
         while (attempts < retries && !success) {
             try {
@@ -40,6 +64,7 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
                     Thread.sleep(retryDelayMs)
                 }
             } catch (e: Exception) {
+                exception = e
                 if (attempts < retries - 1) {
                     Thread.sleep(retryDelayMs)
                 }
@@ -48,7 +73,15 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
         }
 
         healthy.set(success)
-        lastResponseTime.set(System.currentTimeMillis() - startTime)
+        val responseTime = System.currentTimeMillis() - startTime
+        lastResponseTime.set(responseTime)
+
+        // Publish health check completed or failed event
+        if (success) {
+            publishHealthCheckCompletedEvent(responseTime)
+        } else {
+            publishHealthCheckFailedEvent(exception)
+        }
     }
 
     /**
@@ -77,8 +110,12 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
         val startTime = System.currentTimeMillis()
         lastExecutionTime.set(startTime)
 
+        // Publish health check started event
+        publishHealthCheckStartedEvent()
+
         var success = false
         var attempts = 0
+        var exception: Exception? = null
 
         while (attempts < retries && !success) {
             try {
@@ -87,6 +124,7 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
                     Thread.sleep(retryDelayMs)
                 }
             } catch (e: Exception) {
+                exception = e
                 if (attempts < retries - 1) {
                     Thread.sleep(retryDelayMs)
                 }
@@ -95,7 +133,15 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
         }
 
         healthy.set(success)
-        lastResponseTime.set(System.currentTimeMillis() - startTime)
+        val responseTime = System.currentTimeMillis() - startTime
+        lastResponseTime.set(responseTime)
+
+        // Publish health check completed or failed event
+        if (success) {
+            publishHealthCheckCompletedEvent(responseTime)
+        } else {
+            publishHealthCheckFailedEvent(exception)
+        }
 
         return isHealthy()
     }
@@ -176,6 +222,40 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
         this.schedulePeriodMs = TimeUnit.MILLISECONDS.convert(period, unit)
         this.scheduleTimeUnit = unit
         return this
+    }
+
+    /**
+     * Publishes a health check started event.
+     */
+    private fun publishHealthCheckStartedEvent() {
+        if (eventBus != null && host != null && port != null) {
+            val event = HealthCheckStartedEvent(host!!, port!!, this)
+            eventBus!!.publishEvent(event)
+        }
+    }
+
+    /**
+     * Publishes a health check completed event.
+     * 
+     * @param responseTime the response time of the health check in milliseconds
+     */
+    private fun publishHealthCheckCompletedEvent(responseTime: Long) {
+        if (eventBus != null && host != null && port != null) {
+            val event = HealthCheckCompletedEvent(host!!, port!!, this, responseTime)
+            eventBus!!.publishEvent(event)
+        }
+    }
+
+    /**
+     * Publishes a health check failed event.
+     * 
+     * @param exception the exception that caused the failure, or null if the health check failed without an exception
+     */
+    private fun publishHealthCheckFailedEvent(exception: Exception?) {
+        if (eventBus != null && host != null && port != null) {
+            val event = HealthCheckFailedEvent(host!!, port!!, this, exception)
+            eventBus!!.publishEvent(event)
+        }
     }
 
     companion object {
