@@ -34,6 +34,7 @@ nav:
   - Getting Started: getting-started.md
   - Clients:
     - Jedis: clients/jedis.md
+    - JedisPooled: clients/jedis-pooled.md
     - UnifiedJedis: clients/unified-jedis.md
     - Lettuce: clients/lettuce.md
   - High Availability:

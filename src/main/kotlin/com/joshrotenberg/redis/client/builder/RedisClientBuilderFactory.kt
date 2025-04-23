@@ -2,6 +2,7 @@ package com.joshrotenberg.redis.client.builder
 
 import com.joshrotenberg.redis.client.builder.jedis.JedisClientBuilder
 import com.joshrotenberg.redis.client.builder.jedis.JedisClusterClientBuilder
+import com.joshrotenberg.redis.client.builder.jedis.JedisPooledClientBuilder
 import com.joshrotenberg.redis.client.builder.jedis.JedisSentinelClientBuilder
 import com.joshrotenberg.redis.client.builder.jedis.UnifiedJedisClientBuilder
 import com.joshrotenberg.redis.client.builder.lettuce.LettuceClientBuilder
@@ -10,6 +11,7 @@ import io.lettuce.core.RedisClient
 import io.lettuce.core.cluster.RedisClusterClient
 import redis.clients.jedis.JedisCluster
 import redis.clients.jedis.JedisPool
+import redis.clients.jedis.JedisPooled
 import redis.clients.jedis.JedisSentinelPool
 import redis.clients.jedis.UnifiedJedis
 
@@ -35,6 +37,14 @@ object RedisClientBuilderFactory {
      */
     @JvmStatic
     fun unifiedJedis(): UnifiedJedisClientBuilder = UnifiedJedisClientBuilder.create()
+
+    /**
+     * Creates a new JedisPooledClientBuilder instance.
+     *
+     * @return A new JedisPooledClientBuilder instance
+     */
+    @JvmStatic
+    fun jedisPooled(): JedisPooledClientBuilder = JedisPooledClientBuilder.create()
 
     /**
      * Creates a new LettuceClientBuilder instance.
@@ -80,6 +90,7 @@ object RedisClientBuilderFactory {
         when {
             JedisPool::class.java.isAssignableFrom(type) -> jedis()
             UnifiedJedis::class.java.isAssignableFrom(type) -> unifiedJedis()
+            JedisPooled::class.java.isAssignableFrom(type) -> jedisPooled()
             RedisClient::class.java.isAssignableFrom(type) -> lettuce()
             else -> throw IllegalArgumentException("Unsupported Redis client type: ${type.name}")
         }
