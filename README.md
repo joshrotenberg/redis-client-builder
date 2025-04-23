@@ -22,11 +22,20 @@ The library provides a consistent API across all supported Redis client librarie
 
 ## Installation
 
+Redis Client Builder is designed with optional dependencies, allowing you to include only the Redis client libraries you actually need.
+
 ### Gradle (Kotlin DSL)
 
 ```kotlin
 dependencies {
+    // Core library
     implementation("com.joshrotenberg:redis-client-builder:1.0-SNAPSHOT")
+
+    // Include only the Redis client libraries you need
+    // For Jedis
+    implementation("redis.clients:jedis:5.2.0")
+    // For Lettuce
+    implementation("io.lettuce:lettuce-core:6.3.1.RELEASE")
 }
 ```
 
@@ -34,7 +43,14 @@ dependencies {
 
 ```groovy
 dependencies {
+    // Core library
     implementation 'com.joshrotenberg:redis-client-builder:1.0-SNAPSHOT'
+
+    // Include only the Redis client libraries you need
+    // For Jedis
+    implementation 'redis.clients:jedis:5.2.0'
+    // For Lettuce
+    implementation 'io.lettuce:lettuce-core:6.3.1.RELEASE'
 }
 ```
 
@@ -45,6 +61,20 @@ dependencies {
     <groupId>com.joshrotenberg</groupId>
     <artifactId>redis-client-builder</artifactId>
     <version>1.0-SNAPSHOT</version>
+</dependency>
+
+<!-- Include only the Redis client libraries you need -->
+<!-- For Jedis -->
+<dependency>
+    <groupId>redis.clients</groupId>
+    <artifactId>jedis</artifactId>
+    <version>5.2.0</version>
+</dependency>
+<!-- For Lettuce -->
+<dependency>
+    <groupId>io.lettuce</groupId>
+    <artifactId>lettuce-core</artifactId>
+    <version>6.3.1.RELEASE</version>
 </dependency>
 ```
 

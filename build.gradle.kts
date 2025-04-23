@@ -12,9 +12,9 @@ repositories {
 }
 
 dependencies {
-    // Redis client libraries
-    implementation(libs.jedis)
-    implementation(libs.lettuce.core)
+    // Redis client libraries - marked as compileOnly so they're not transitive dependencies
+    compileOnly(libs.jedis)
+    compileOnly(libs.lettuce.core)
 
     // Testing
     testImplementation(kotlin("test"))
@@ -23,6 +23,10 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.testcontainers.junit)
     testImplementation(libs.testcontainers)
+
+    // For tests, we need the actual implementations
+    testImplementation(libs.jedis)
+    testImplementation(libs.lettuce.core)
 }
 
 tasks.test {
