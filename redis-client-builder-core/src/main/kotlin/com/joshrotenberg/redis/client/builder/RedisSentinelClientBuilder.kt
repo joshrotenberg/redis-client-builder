@@ -78,7 +78,9 @@ interface RedisSentinelClientBuilder<T> {
      * @param configurer A function that configures the circuit breaker
      * @return This builder instance
      */
-    fun withCircuitBreaker(configurer: (RedisCircuitBreaker<T>) -> RedisCircuitBreaker<T>): RedisSentinelClientBuilder<T>
+    fun withCircuitBreaker(
+        configurer: (RedisCircuitBreaker<T>) -> RedisCircuitBreaker<T>
+    ): RedisSentinelClientBuilder<T>
 
     /**
      * Configures a retry mechanism for the Redis sentinel client.
