@@ -36,6 +36,9 @@ nav:
     - Jedis: clients/jedis.md
     - UnifiedJedis: clients/unified-jedis.md
     - Lettuce: clients/lettuce.md
+  - High Availability:
+    - Cluster: clients/cluster.md
+    - Sentinel: clients/sentinel.md
   - Comparison: comparison.md
   - API Reference: api-reference.md
   - Contributing: contributing.md
