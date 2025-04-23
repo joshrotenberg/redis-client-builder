@@ -29,15 +29,15 @@ class UnifiedJedisClientBuilder : RedisClientBuilder<UnifiedJedis> {
     private var sslSocketFactory: SSLSocketFactory? = null
     private var sslParameters: SSLParameters? = null
     private var hostnameVerifier: HostnameVerifier? = null
-    
+
     // URI for connection
     private var uri: URI? = null
-    
+
     // Connection mode
     private enum class ConnectionMode {
         DIRECT, URI
     }
-    
+
     private var connectionMode: ConnectionMode = ConnectionMode.DIRECT
 
     override fun host(host: String): UnifiedJedisClientBuilder {

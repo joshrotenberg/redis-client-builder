@@ -1,18 +1,18 @@
 # Redis Client Builder - Tasks
 
 ## Core Functionality
-- [ ] Add support for Redis Cluster configuration
-  - [ ] Extend builders to support cluster configuration
-  - [ ] Add documentation for cluster configuration
+- [x] Add support for Redis Cluster configuration
+  - [x] Extend builders to support cluster configuration
+  - [x] Add documentation for cluster configuration
 - [ ] Add support for Redis Sentinel configuration
   - [ ] Extend builders to support sentinel configuration
   - [ ] Add documentation for sentinel configuration
-- [ ] Implement connection pooling options for all client libraries
-- [ ] Add support for SSL/TLS configuration with custom certificates
+- [x] Implement connection pooling options for all client libraries
+- [x] Add support for SSL/TLS configuration with custom certificates
 
 ## Testing
-- [ ] Add unit tests for all builder classes
-- [ ] Add integration tests for all Redis client types
+- [x] Add unit tests for all builder classes
+- [x] Add integration tests for all Redis client types
 - [ ] Add tests for cluster and sentinel configurations
 - [ ] Implement test coverage reporting
 - [ ] Add performance benchmarks for different client libraries
@@ -27,7 +27,7 @@
 ## Build & CI/CD
 - [ ] Set up continuous integration with GitHub Actions
 - [ ] Configure automated testing on multiple JDK versions
-- [ ] Set up code quality checks (e.g., ktlint, detekt)
+- [x] Set up code quality checks (e.g., ktlint, detekt)
 - [ ] Configure automated release process
 - [ ] Set up dependency vulnerability scanning
 

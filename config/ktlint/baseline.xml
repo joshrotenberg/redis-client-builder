@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<baseline>
+  <files>
+    <!-- Add files with issues to be ignored -->
+    <file name="src/main/kotlin/com/joshrotenberg/redis/client/builder/jedis/JedisClientBuilder.kt">
+      <errors>
+        <error line="0" column="0" source="standard:final-newline" />
+      </errors>
+    </file>
+    <file name="src/main/kotlin/com/joshrotenberg/redis/client/builder/jedis/JedisClusterClientBuilder.kt">
+      <errors>
+        <error line="0" column="0" source="standard:final-newline" />
+      </errors>
+    </file>
+    <file name="src/main/kotlin/com/joshrotenberg/redis/client/builder/jedis/UnifiedJedisClientBuilder.kt">
+      <errors>
+        <error line="0" column="0" source="standard:final-newline" />
+      </errors>
+    </file>
+    <file name="src/main/kotlin/com/joshrotenberg/redis/client/builder/lettuce/LettuceClientBuilder.kt">
+      <errors>
+        <error line="0" column="0" source="standard:final-newline" />
+      </errors>
+    </file>
+    <file name="src/main/kotlin/com/joshrotenberg/redis/client/builder/lettuce/LettuceClusterClientBuilder.kt">
+      <errors>
+        <error line="0" column="0" source="standard:final-newline" />
+      </errors>
+    </file>
+    <file name="src/main/kotlin/com/joshrotenberg/redis/client/builder/RedisClientBuilder.kt">
+      <errors>
+        <error line="0" column="0" source="standard:final-newline" />
+      </errors>
+    </file>
+    <file name="src/main/kotlin/com/joshrotenberg/redis/client/builder/RedisClusterClientBuilder.kt">
+      <errors>
+        <error line="0" column="0" source="standard:final-newline" />
+      </errors>
+    </file>
+    <file name="src/main/kotlin/com/joshrotenberg/redis/client/builder/RedisSentinelClientBuilder.kt">
+      <errors>
+        <error line="0" column="0" source="standard:final-newline" />
+      </errors>
+    </file>
+  </files>
+</baseline>

@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>MagicNumber:JedisClusterClientBuilder.kt$JedisClusterClientBuilder$2000</ID>
+    <ID>MagicNumber:JedisClusterClientBuilder.kt$JedisClusterClientBuilder$30000</ID>
+    <ID>MagicNumber:JedisClusterClientBuilder.kt$JedisClusterClientBuilder$8</ID>
+    <ID>MagicNumber:LettuceClientBuilder.kt$LettuceClientBuilder$2147483647</ID>
+    <ID>MagicNumber:LettuceClientBuilder.kt$LettuceClientBuilder$60000</ID>
+    <ID>MagicNumber:LettuceClientBuilder.kt$LettuceClientBuilder$6379</ID>
+    <ID>MagicNumber:LettuceClusterClientBuilder.kt$LettuceClusterClientBuilder$2147483647</ID>
+    <ID>MagicNumber:LettuceClusterClientBuilder.kt$LettuceClusterClientBuilder$60000</ID>
+    <ID>NewLineAtEndOfFile:JedisIntegrationTest.kt$com.joshrotenberg.redis.client.builder.integration.JedisIntegrationTest.kt</ID>
+    <ID>NewLineAtEndOfFile:JedisSentinelClientBuilderTest.kt$com.joshrotenberg.redis.client.builder.jedis.JedisSentinelClientBuilderTest.kt</ID>
+    <ID>NewLineAtEndOfFile:LettuceClusterClientBuilder.kt$com.joshrotenberg.redis.client.builder.lettuce.LettuceClusterClientBuilder.kt</ID>
+    <ID>NewLineAtEndOfFile:LettuceIntegrationTest.kt$com.joshrotenberg.redis.client.builder.integration.LettuceIntegrationTest.kt</ID>
+    <ID>NewLineAtEndOfFile:RedisClusterClientBuilder.kt$com.joshrotenberg.redis.client.builder.RedisClusterClientBuilder.kt</ID>
+    <ID>NewLineAtEndOfFile:RedisSentinelClientBuilder.kt$com.joshrotenberg.redis.client.builder.RedisSentinelClientBuilder.kt</ID>
+    <ID>NewLineAtEndOfFile:UnifiedJedisClientBuilderTest.kt$com.joshrotenberg.redis.client.builder.jedis.UnifiedJedisClientBuilderTest.kt</ID>
+    <ID>NewLineAtEndOfFile:UnifiedJedisIntegrationTest.kt$com.joshrotenberg.redis.client.builder.integration.UnifiedJedisIntegrationTest.kt</ID>
+    <ID>SwallowedException:LettuceClientBuilderTest.kt$LettuceClientBuilderTest$e: NoSuchFieldException</ID>
+    <ID>TooManyFunctions:JedisClientBuilder.kt$JedisClientBuilder : RedisClientBuilder</ID>
+    <ID>TooManyFunctions:JedisClusterClientBuilder.kt$JedisClusterClientBuilder : RedisClusterClientBuilder</ID>
+    <ID>TooManyFunctions:JedisSentinelClientBuilder.kt$JedisSentinelClientBuilder : RedisSentinelClientBuilder</ID>
+    <ID>TooManyFunctions:UnifiedJedisClientBuilder.kt$UnifiedJedisClientBuilder : RedisClientBuilder</ID>
+    <ID>UseCheckOrError:JedisClusterClientBuilder.kt$JedisClusterClientBuilder$throw IllegalStateException("At least one cluster node must be added")</ID>
+    <ID>UseCheckOrError:JedisSentinelClientBuilder.kt$JedisSentinelClientBuilder$throw IllegalStateException("At least one sentinel node must be added")</ID>
+    <ID>UseCheckOrError:JedisSentinelClientBuilder.kt$JedisSentinelClientBuilder$throw IllegalStateException("Master name must be set")</ID>
+    <ID>UseCheckOrError:LettuceClusterClientBuilder.kt$LettuceClusterClientBuilder$throw IllegalStateException("At least one cluster node must be added")</ID>
+    <ID>UseCheckOrError:UnifiedJedisClientBuilder.kt$UnifiedJedisClientBuilder$throw IllegalStateException("URI is not set")</ID>
+    <ID>UtilityClassWithPublicConstructor:RedisContainerTest.kt$RedisContainerTest</ID>
+    <ID>WildcardImport:JedisClientBuilderTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:JedisIntegrationTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:LettuceClientBuilderTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:LettuceIntegrationTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:RedisClientBuilderFactoryTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:UnifiedJedisClientBuilderTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+    <ID>WildcardImport:UnifiedJedisIntegrationTest.kt$import org.junit.jupiter.api.Assertions.*</ID>
+  </CurrentIssues>
+</SmellBaseline>

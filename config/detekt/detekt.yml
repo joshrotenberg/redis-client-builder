@@ -1,0 +1,29 @@
+# Default detekt configuration with customizations for Redis Client Builder
+# Documentation: https://detekt.dev/docs/introduction/configurations
+
+build:
+  maxIssues: 10
+
+style:
+  MagicNumber:
+    active: true
+    ignoreNumbers: ['-1', '0', '1', '2', '3', '4', '5', '10', '100', '1000']
+  WildcardImport:
+    active: true
+    excludeImports: ['java.util.*', 'kotlinx.android.synthetic.*']
+
+complexity:
+  TooManyFunctions:
+    active: true
+    thresholdInFiles: 15
+    thresholdInClasses: 15
+    thresholdInInterfaces: 15
+    thresholdInObjects: 15
+    thresholdInEnums: 10
+  LongParameterList:
+    active: true
+    functionThreshold: 6
+    constructorThreshold: 8
+  LongMethod:
+    active: true
+    threshold: 60
