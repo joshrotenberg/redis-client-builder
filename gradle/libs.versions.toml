@@ -1,7 +1,6 @@
 [versions]
 jedis = "5.1.0"
 lettuce = "6.3.0.RELEASE"
-redisson = "3.25.0"
 junit = "5.10.1"
 mockk = "1.13.9"
 testcontainers = "1.19.3"

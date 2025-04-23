@@ -1,9 +1,13 @@
 package com.joshrotenberg.redis.client.builder
 
 import com.joshrotenberg.redis.client.builder.jedis.JedisClientBuilder
+import com.joshrotenberg.redis.client.builder.jedis.JedisClusterClientBuilder
 import com.joshrotenberg.redis.client.builder.jedis.UnifiedJedisClientBuilder
 import com.joshrotenberg.redis.client.builder.lettuce.LettuceClientBuilder
+import com.joshrotenberg.redis.client.builder.lettuce.LettuceClusterClientBuilder
 import io.lettuce.core.RedisClient
+import io.lettuce.core.cluster.RedisClusterClient
+import redis.clients.jedis.JedisCluster
 import redis.clients.jedis.JedisPool
 import redis.clients.jedis.UnifiedJedis
 
@@ -39,6 +43,22 @@ object RedisClientBuilderFactory {
     fun lettuce(): LettuceClientBuilder = LettuceClientBuilder.create()
 
     /**
+     * Creates a new JedisClusterClientBuilder instance.
+     *
+     * @return A new JedisClusterClientBuilder instance
+     */
+    @JvmStatic
+    fun jedisCluster(): JedisClusterClientBuilder = JedisClusterClientBuilder.create()
+
+    /**
+     * Creates a new LettuceClusterClientBuilder instance.
+     *
+     * @return A new LettuceClusterClientBuilder instance
+     */
+    @JvmStatic
+    fun lettuceCluster(): LettuceClusterClientBuilder = LettuceClusterClientBuilder.create()
+
+    /**
      * Creates a new builder instance for the specified Redis client type.
      *
      * @param type The Redis client type
@@ -52,5 +72,20 @@ object RedisClientBuilderFactory {
             UnifiedJedis::class.java.isAssignableFrom(type) -> unifiedJedis()
             RedisClient::class.java.isAssignableFrom(type) -> lettuce()
             else -> throw IllegalArgumentException("Unsupported Redis client type: ${type.name}")
+        }
+
+    /**
+     * Creates a new cluster builder instance for the specified Redis cluster client type.
+     *
+     * @param type The Redis cluster client type
+     * @return A new cluster builder instance for the specified Redis cluster client type
+     * @throws IllegalArgumentException if the specified Redis cluster client type is not supported
+     */
+    @JvmStatic
+    fun <T> clusterBuilder(type: Class<T>): RedisClusterClientBuilder<*> =
+        when {
+            JedisCluster::class.java.isAssignableFrom(type) -> jedisCluster()
+            RedisClusterClient::class.java.isAssignableFrom(type) -> lettuceCluster()
+            else -> throw IllegalArgumentException("Unsupported Redis cluster client type: ${type.name}")
         }
 }

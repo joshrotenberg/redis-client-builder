@@ -8,7 +8,6 @@ Redis Client Builder is a library that simplifies the instantiation of Redis cli
 
 - [Jedis](https://github.com/redis/jedis)
 - [Lettuce](https://github.com/lettuce-io/lettuce-core)
-- [Redisson](https://github.com/redisson/redisson)
 
 The library provides a consistent API across all supported Redis client libraries, making it easy to switch between them without changing your configuration code.
 
@@ -180,50 +179,120 @@ connection.close();
 redisClient.shutdown();
 ```
 
-### Redisson
+### Redis Cluster Support
+
+Redis Client Builder also supports Redis Cluster configuration for Jedis and Lettuce clients.
+
+#### Jedis Cluster
 
 ```kotlin
 // Kotlin
-val redissonClient = RedisClientBuilderFactory.redisson()
-    .host("localhost")
-    .port(6379)
+val jedisCluster = RedisClientBuilderFactory.jedisCluster()
+    .addNode("localhost", 7000)
+    .addNode("localhost", 7001)
+    .addNode("localhost", 7002)
     .password("password")
-    .database(0)
     .connectionTimeout(2000)
     .socketTimeout(2000)
+    .maxRedirections(5)
     .ssl(true)
-    .retryAttempts(3)
-    .retryInterval(1500)
+    .maxTotal(100)
+    .maxIdle(10)
     .build()
 
-// Use the RedissonClient
-val bucket = redissonClient.getBucket<String>("key")
-bucket.set("value")
-val value = bucket.get()
+// Use the JedisCluster
+jedisCluster.set("key", "value")
+val value = jedisCluster.get("key")
 println(value)
-redissonClient.shutdown()
+jedisCluster.close()
 ```
 
 ```java
 // Java
-RedissonClient redissonClient = RedisClientBuilderFactory.redisson()
-    .host("localhost")
-    .port(6379)
+JedisCluster jedisCluster = RedisClientBuilderFactory.jedisCluster()
+    .addNode("localhost", 7000)
+    .addNode("localhost", 7001)
+    .addNode("localhost", 7002)
     .password("password")
-    .database(0)
     .connectionTimeout(2000)
     .socketTimeout(2000)
+    .maxRedirections(5)
     .ssl(true)
-    .retryAttempts(3)
-    .retryInterval(1500)
+    .maxTotal(100)
+    .maxIdle(10)
     .build();
 
-// Use the RedissonClient
-RBucket<String> bucket = redissonClient.getBucket("key");
-bucket.set("value");
-String value = bucket.get();
+// Use the JedisCluster
+jedisCluster.set("key", "value");
+String value = jedisCluster.get("key");
 System.out.println(value);
-redissonClient.shutdown();
+jedisCluster.close();
+```
+
+#### Lettuce Cluster
+
+```kotlin
+// Kotlin
+val redisClusterClient = RedisClientBuilderFactory.lettuceCluster()
+    .addNode("localhost", 7000)
+    .addNode("localhost", 7001)
+    .addNode("localhost", 7002)
+    .password("password")
+    .connectionTimeout(2000)
+    .socketTimeout(2000)
+    .maxRedirections(5)
+    .ssl(true)
+    .autoReconnect(true)
+    .build()
+
+// Use the RedisClusterClient
+val connection = redisClusterClient.connect()
+val commands = connection.sync()
+commands.set("key", "value")
+val value = commands.get("key")
+println(value)
+connection.close()
+redisClusterClient.shutdown()
+```
+
+```java
+// Java
+RedisClusterClient redisClusterClient = RedisClientBuilderFactory.lettuceCluster()
+    .addNode("localhost", 7000)
+    .addNode("localhost", 7001)
+    .addNode("localhost", 7002)
+    .password("password")
+    .connectionTimeout(2000)
+    .socketTimeout(2000)
+    .maxRedirections(5)
+    .ssl(true)
+    .autoReconnect(true)
+    .build();
+
+// Use the RedisClusterClient
+StatefulRedisClusterConnection<String, String> connection = redisClusterClient.connect();
+RedisAdvancedClusterCommands<String, String> commands = connection.sync();
+commands.set("key", "value");
+String value = commands.get("key");
+System.out.println(value);
+connection.close();
+redisClusterClient.shutdown();
+```
+
+#### Generic Cluster Builder
+
+You can also use the generic cluster builder method to create a builder for a specific Redis cluster client type:
+
+```kotlin
+// Kotlin
+val jedisClusterBuilder = RedisClientBuilderFactory.clusterBuilder(JedisCluster::class.java) as JedisClusterClientBuilder
+val lettuceClusterBuilder = RedisClientBuilderFactory.clusterBuilder(RedisClusterClient::class.java) as LettuceClusterClientBuilder
+```
+
+```java
+// Java
+JedisClusterClientBuilder jedisClusterBuilder = (JedisClusterClientBuilder) RedisClientBuilderFactory.clusterBuilder(JedisCluster.class);
+LettuceClusterClientBuilder lettuceClusterBuilder = (LettuceClusterClientBuilder) RedisClientBuilderFactory.clusterBuilder(RedisClusterClient.class);
 ```
 
 ### Generic Builder
@@ -234,14 +303,12 @@ You can also use the generic builder method to create a builder for a specific R
 // Kotlin
 val jedisBuilder = RedisClientBuilderFactory.builder(JedisPool::class.java) as JedisClientBuilder
 val lettuceBuilder = RedisClientBuilderFactory.builder(RedisClient::class.java) as LettuceClientBuilder
-val redissonBuilder = RedisClientBuilderFactory.builder(RedissonClient::class.java) as RedissonClientBuilder
 ```
 
 ```java
 // Java
 JedisClientBuilder jedisBuilder = (JedisClientBuilder) RedisClientBuilderFactory.builder(JedisPool.class);
 LettuceClientBuilder lettuceBuilder = (LettuceClientBuilder) RedisClientBuilderFactory.builder(RedisClient.class);
-RedissonClientBuilder redissonBuilder = (RedissonClientBuilder) RedisClientBuilderFactory.builder(RedissonClient.class);
 ```
 
 ## Documentation
@@ -263,6 +330,10 @@ pip install mkdocs mkdocs-material
 # Serve the documentation site locally
 mkdocs serve
 ```
+
+## Contributing
+
+If you're interested in contributing to this project, please check out the [TASKS.md](TASKS.md) file for a list of tasks that need to be implemented.
 
 ## License
 

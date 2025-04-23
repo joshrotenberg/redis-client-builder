@@ -8,7 +8,6 @@ Redis Client Builder is a library that simplifies the instantiation of Redis cli
 
 - [Jedis](https://github.com/redis/jedis)
 - [Lettuce](https://github.com/lettuce-io/lettuce-core)
-- [Redisson](https://github.com/redisson/redisson)
 
 The library provides a consistent API across all supported Redis client libraries, making it easy to switch between them without changing your configuration code.
 
