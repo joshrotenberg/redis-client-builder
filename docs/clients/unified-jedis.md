@@ -144,11 +144,25 @@ val unifiedJedis = RedisClientBuilderFactory.unifiedJedis()
     .build()
 ```
 
+```java
+// Using URI
+UnifiedJedis unifiedJedis = RedisClientBuilderFactory.unifiedJedis()
+    .uri("redis://user:password@localhost:6379/0")
+    .build();
+```
+
 ```kotlin
 // Using URI with SSL
 val unifiedJedis = RedisClientBuilderFactory.unifiedJedis()
     .uri("rediss://user:password@localhost:6379/0")
     .build()
+```
+
+```java
+// Using URI with SSL
+UnifiedJedis unifiedJedis = RedisClientBuilderFactory.unifiedJedis()
+    .uri("rediss://user:password@localhost:6379/0")
+    .build();
 ```
 
 ## Examples
@@ -161,6 +175,14 @@ unifiedJedis.set("key", "value")
 val value = unifiedJedis.get("key")
 println(value) // Outputs: value
 unifiedJedis.close()
+```
+
+```java
+UnifiedJedis unifiedJedis = RedisClientBuilderFactory.unifiedJedis().build();
+unifiedJedis.set("key", "value");
+String value = unifiedJedis.get("key");
+System.out.println(value); // Outputs: value
+unifiedJedis.close();
 ```
 
 ### Connection with Authentication
@@ -178,6 +200,19 @@ println(value) // Outputs: value
 unifiedJedis.close()
 ```
 
+```java
+UnifiedJedis unifiedJedis = RedisClientBuilderFactory.unifiedJedis()
+    .host("localhost")
+    .port(6379)
+    .user("default")
+    .password("password")
+    .build();
+unifiedJedis.set("key", "value");
+String value = unifiedJedis.get("key");
+System.out.println(value); // Outputs: value
+unifiedJedis.close();
+```
+
 ### Connection with SSL
 
 ```kotlin
@@ -192,6 +227,18 @@ println(value) // Outputs: value
 unifiedJedis.close()
 ```
 
+```java
+UnifiedJedis unifiedJedis = RedisClientBuilderFactory.unifiedJedis()
+    .host("localhost")
+    .port(6379)
+    .ssl(true)
+    .build();
+unifiedJedis.set("key", "value");
+String value = unifiedJedis.get("key");
+System.out.println(value); // Outputs: value
+unifiedJedis.close();
+```
+
 ### Connection with URI
 
 ```kotlin
@@ -202,4 +249,14 @@ unifiedJedis.set("key", "value")
 val value = unifiedJedis.get("key")
 println(value) // Outputs: value
 unifiedJedis.close()
+```
+
+```java
+UnifiedJedis unifiedJedis = RedisClientBuilderFactory.unifiedJedis()
+    .uri("redis://localhost:6379/0")
+    .build();
+unifiedJedis.set("key", "value");
+String value = unifiedJedis.get("key");
+System.out.println(value); // Outputs: value
+unifiedJedis.close();
 ```

@@ -18,9 +18,15 @@ abstract class RedisContainerTest {
 
         @JvmStatic
         lateinit var redisHost: String
+            private set
+            @JvmStatic
+            get
 
         @JvmStatic
         var redisPort: Int = 0
+            private set
+            @JvmStatic
+            get
 
         @BeforeAll
         @JvmStatic
