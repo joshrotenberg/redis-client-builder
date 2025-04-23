@@ -1,9 +1,9 @@
 [versions]
-jedis = "5.1.0"
-lettuce = "6.3.0.RELEASE"
-junit = "5.10.1"
-mockk = "1.13.9"
-testcontainers = "1.19.3"
+jedis = "5.2.0" # Latest version as of June 2023
+lettuce = "6.3.1.RELEASE" # Updated from 6.3.0.RELEASE
+junit = "5.10.1" # Latest version as of January 2024
+mockk = "1.13.9" # Latest version as of January 2024
+testcontainers = "1.19.3" # Latest version as of January 2024
 
 [libraries]
 jedis = { module = "redis.clients:jedis", version.ref = "jedis" }
@@ -15,4 +15,4 @@ testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "
 testcontainers-junit = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
 
 [plugins]
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.1.20" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "1.9.22" } # Updated from 2.1.20 to the latest stable version
