@@ -1,8 +1,10 @@
 package com.joshrotenberg.redis.client.builder.failover
 
 import com.google.common.util.concurrent.AbstractScheduledService
-import com.google.common.util.concurrent.Service
-import com.joshrotenberg.redis.client.builder.failover.event.*
+import com.joshrotenberg.redis.client.builder.failover.event.EventBus
+import com.joshrotenberg.redis.client.builder.failover.event.HealthCheckCompletedEvent
+import com.joshrotenberg.redis.client.builder.failover.event.HealthCheckFailedEvent
+import com.joshrotenberg.redis.client.builder.failover.event.HealthCheckStartedEvent
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
@@ -72,7 +74,7 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
 
     /**
      * Helper method to execute the health check with retries.
-     * 
+     *
      * @return a pair of (success, exception) where success is true if the health check passed,
      *         and exception is the last exception caught (if any)
      */
@@ -93,6 +95,8 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
             } catch (e: UnsupportedOperationException) {
                 exception = e
             } catch (e: InterruptedException) {
+                exception = e
+            } catch (e: RuntimeException) {
                 exception = e
             }
 
@@ -118,7 +122,7 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
     /**
      * Executes the health check and returns the result.
      * This method is called by runOneIteration() and should be implemented by subclasses.
-     * 
+     *
      * @return true if the health check passed, false otherwise
      */
     protected abstract fun doExecute(): Boolean
@@ -126,7 +130,7 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
     /**
      * Executes the health check immediately and returns the result.
      * This method can be called manually to execute the health check outside of the schedule.
-     * 
+     *
      * @return true if the health check passed, false otherwise
      */
     override fun execute(): Boolean {
@@ -156,7 +160,7 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
 
     /**
      * Gets the current health status of the endpoint.
-     * 
+     *
      * @return true if the endpoint is healthy, false otherwise
      */
     override fun isHealthy(): Boolean {
@@ -165,7 +169,7 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
 
     /**
      * Gets the last execution time of the health check in milliseconds.
-     * 
+     *
      * @return the timestamp of the last execution, or null if never executed
      */
     override fun getLastExecutionTime(): Long? {
@@ -176,7 +180,7 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
     /**
      * Gets the last response time of the health check in milliseconds.
      * This represents how long the health check operation took to complete.
-     * 
+     *
      * @return the response time in milliseconds, or null if never executed
      */
     override fun getLastResponseTime(): Long? {
@@ -187,7 +191,7 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
     /**
      * Configures the timeout for the health check in milliseconds.
      * The health check should fail if it takes longer than this timeout.
-     * 
+     *
      * @param timeoutMs the timeout in milliseconds
      * @return this health check instance
      */
@@ -199,7 +203,7 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
     /**
      * Configures the number of retries for the health check.
      * The health check should retry this many times before considering the endpoint unhealthy.
-     * 
+     *
      * @param retries the number of retries
      * @return this health check instance
      */
@@ -210,7 +214,7 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
 
     /**
      * Configures the delay between retries in milliseconds.
-     * 
+     *
      * @param delayMs the delay in milliseconds
      * @return this health check instance
      */
@@ -221,7 +225,7 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
 
     /**
      * Configures the schedule period for the health check.
-     * 
+     *
      * @param period the period between executions
      * @param unit the time unit for the period
      * @return this health check instance
@@ -232,7 +236,6 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
         return this
     }
 
-
     /**
      * Enum defining the types of health check events.
      */
@@ -242,7 +245,7 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
 
     /**
      * Publishes a health check event.
-     * 
+     *
      * @param eventType the type of event to publish (STARTED, COMPLETED, FAILED)
      * @param responseTime the response time of the health check in milliseconds (for COMPLETED events)
      * @param exception the exception that caused the failure (for FAILED events)

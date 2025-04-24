@@ -43,7 +43,8 @@ class EventBus {
             } catch (e: Exception) {
                 // Log the exception but continue notifying other listeners
                 System.err.println("Error notifying listener: ${e.message}")
-                e.printStackTrace()
+                // Using System.err instead of printStackTrace for better logging
+                System.err.println("Stack trace: ${e.stackTraceToString()}")
             }
         }
     }

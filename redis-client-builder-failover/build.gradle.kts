@@ -1,10 +1,10 @@
 dependencies {
     // Core module dependency
     implementation(project(":redis-client-builder-core"))
-    
+
     // Guava dependency for AbstractScheduledService
     api(libs.guava)
-    
+
     // Testing
     testImplementation(kotlin("test"))
     testImplementation(libs.junit.api)

@@ -1,6 +1,10 @@
 package com.joshrotenberg.redis.client.builder.failover.metrics
 
-import com.joshrotenberg.redis.client.builder.failover.event.*
+import com.joshrotenberg.redis.client.builder.failover.event.AbstractTypedEventListener
+import com.joshrotenberg.redis.client.builder.failover.event.Event
+import com.joshrotenberg.redis.client.builder.failover.event.FailoverEvent
+import com.joshrotenberg.redis.client.builder.failover.event.HealthCheckCompletedEvent
+import com.joshrotenberg.redis.client.builder.failover.event.HealthCheckFailedEvent
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicLong
 import java.util.concurrent.atomic.LongAdder
@@ -12,15 +16,15 @@ import java.util.concurrent.atomic.LongAdder
 class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
     // Response time metrics
     private val responseTimesByEndpoint = ConcurrentHashMap<Pair<String, Int>, ResponseTimeMetrics>()
-    
+
     // Success/failure metrics
     private val successCountByEndpoint = ConcurrentHashMap<Pair<String, Int>, LongAdder>()
     private val failureCountByEndpoint = ConcurrentHashMap<Pair<String, Int>, LongAdder>()
-    
+
     // Failover metrics
     private val failoverCount = AtomicLong(0)
     private val lastFailoverTime = AtomicLong(0)
-    
+
     /**
      * Handles events for metrics collection.
      *
@@ -33,7 +37,7 @@ class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
                 // Update response time metrics
                 responseTimesByEndpoint.computeIfAbsent(endpoint) { ResponseTimeMetrics() }
                     .recordResponseTime(event.responseTime)
-                
+
                 // Update success count
                 successCountByEndpoint.computeIfAbsent(endpoint) { LongAdder() }.increment()
             }
@@ -49,7 +53,7 @@ class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
             }
         }
     }
-    
+
     /**
      * Gets the average response time for a specific endpoint.
      *
@@ -61,7 +65,7 @@ class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
         val metrics = responseTimesByEndpoint[Pair(host, port)]
         return metrics?.getAverageResponseTime()
     }
-    
+
     /**
      * Gets the success rate for a specific endpoint.
      *
@@ -73,7 +77,7 @@ class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
         val endpoint = Pair(host, port)
         val successCount = successCountByEndpoint[endpoint]?.sum() ?: 0
         val failureCount = failureCountByEndpoint[endpoint]?.sum() ?: 0
-        
+
         val total = successCount + failureCount
         return if (total > 0) {
             (successCount.toDouble() / total) * 100
@@ -81,7 +85,7 @@ class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
             null
         }
     }
-    
+
     /**
      * Gets the total number of failovers that have occurred.
      *
@@ -90,7 +94,7 @@ class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
     fun getFailoverCount(): Long {
         return failoverCount.get()
     }
-    
+
     /**
      * Gets the timestamp of the last failover.
      *
@@ -100,7 +104,7 @@ class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
         val time = lastFailoverTime.get()
         return if (time > 0) time else null
     }
-    
+
     /**
      * Resets all metrics.
      */
@@ -111,7 +115,7 @@ class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
         failoverCount.set(0)
         lastFailoverTime.set(0)
     }
-    
+
     /**
      * Helper class for tracking response time metrics.
      */
@@ -120,7 +124,7 @@ class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
         private val sum = AtomicLong(0)
         private val min = AtomicLong(Long.MAX_VALUE)
         private val max = AtomicLong(0)
-        
+
         /**
          * Records a response time.
          *
@@ -129,7 +133,7 @@ class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
         fun recordResponseTime(responseTime: Long) {
             count.incrementAndGet()
             sum.addAndGet(responseTime)
-            
+
             // Update min if the new value is smaller
             var currentMin = min.get()
             while (responseTime < currentMin) {
@@ -138,7 +142,7 @@ class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
                 }
                 currentMin = min.get()
             }
-            
+
             // Update max if the new value is larger
             var currentMax = max.get()
             while (responseTime > currentMax) {
@@ -148,7 +152,7 @@ class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
                 currentMax = max.get()
             }
         }
-        
+
         /**
          * Gets the average response time.
          *
@@ -162,7 +166,7 @@ class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
                 null
             }
         }
-        
+
         /**
          * Gets the minimum response time.
          *
@@ -172,7 +176,7 @@ class MetricsCollector : AbstractTypedEventListener<Event>(Event::class.java) {
             val currentMin = min.get()
             return if (currentMin < Long.MAX_VALUE) currentMin else null
         }
-        
+
         /**
          * Gets the maximum response time.
          *

@@ -18,7 +18,7 @@ class HttpHealthCheck(
 
     /**
      * Executes an HTTP request to the configured URL and checks the response.
-     * 
+     *
      * @return true if the HTTP request returns the expected status code, false otherwise
      */
     override fun doExecute(): Boolean {
@@ -44,7 +44,7 @@ class HttpHealthCheck(
 
     /**
      * Gets the URL being checked.
-     * 
+     *
      * @return the URL
      */
     fun getUrl(): URL {
@@ -53,7 +53,7 @@ class HttpHealthCheck(
 
     /**
      * Gets the expected HTTP status code.
-     * 
+     *
      * @return the expected status code
      */
     fun getExpectedStatusCode(): Int {
@@ -63,7 +63,7 @@ class HttpHealthCheck(
     companion object {
         /**
          * Creates a new HttpHealthCheck with default configuration.
-         * 
+         *
          * @param url the URL to check
          * @param expectedStatusCode the expected HTTP status code (default: 200)
          * @param method the HTTP method to use (default: GET)
@@ -82,7 +82,7 @@ class HttpHealthCheck(
 
         /**
          * Creates a new HttpHealthCheck with default configuration.
-         * 
+         *
          * @param urlString the URL string to check
          * @param expectedStatusCode the expected HTTP status code (default: 200)
          * @param method the HTTP method to use (default: GET)

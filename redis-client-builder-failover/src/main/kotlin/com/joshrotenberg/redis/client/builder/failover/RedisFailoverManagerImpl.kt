@@ -164,4 +164,14 @@ class RedisFailoverManagerImpl : RedisFailoverManager {
     fun getInternalComponents(): Pair<EventBus, MetricsCollector> {
         return Pair(eventBus, metricsCollector)
     }
+
+    /**
+     * Gets the event bus used by this failover manager.
+     * This method is primarily for testing and debugging purposes.
+     *
+     * @return the event bus
+     */
+    fun getEventBus(): EventBus {
+        return eventBus
+    }
 }

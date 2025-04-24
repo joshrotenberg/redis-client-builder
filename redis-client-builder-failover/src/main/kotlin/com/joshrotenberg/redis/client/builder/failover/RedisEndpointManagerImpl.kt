@@ -1,6 +1,7 @@
 package com.joshrotenberg.redis.client.builder.failover
 
-import com.joshrotenberg.redis.client.builder.failover.event.*
+import com.joshrotenberg.redis.client.builder.failover.event.EndpointStatusChangeEvent
+import com.joshrotenberg.redis.client.builder.failover.event.EventBus
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 

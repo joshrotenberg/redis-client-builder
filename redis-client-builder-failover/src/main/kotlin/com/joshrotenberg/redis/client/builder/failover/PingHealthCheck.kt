@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit
 /**
  * A health check that tests Redis connectivity by sending a PING command.
  * This is the most basic health check that verifies the Redis server is responsive.
- * 
+ *
  * This implementation is client-agnostic and uses a provided function to execute the PING command.
  */
 class PingHealthCheck(
@@ -14,7 +14,7 @@ class PingHealthCheck(
 
     /**
      * Executes the PING command against the Redis server using the provided function.
-     * 
+     *
      * @return true if the server responds successfully, false otherwise
      */
     override fun doExecute(): Boolean {
@@ -28,7 +28,7 @@ class PingHealthCheck(
     companion object {
         /**
          * Creates a new PingHealthCheck with default configuration.
-         * 
+         *
          * @param pingFunction a function that executes a PING command and returns true if successful
          * @return a new PingHealthCheck instance
          */

@@ -13,9 +13,8 @@ import java.time.Duration
  * @property registry The time limiter registry to use
  */
 class RedisTimeLimiterImpl<T>(
-    private val registry: TimeLimiterRegistry = TimeLimiterRegistry.ofDefaults()
+    private val registry: TimeLimiterRegistry = TimeLimiterRegistry.ofDefaults(),
 ) : RedisTimeLimiter<T> {
-
     private var name: String = "redis-time-limiter"
     private var timeoutDuration: Long = 1000 // 1 second
     private var cancelRunningFuture: Boolean = true
@@ -60,10 +59,12 @@ class RedisTimeLimiterImpl<T>(
      * @return The created time limiter
      */
     private fun createTimeLimiter(): TimeLimiter {
-        val config = TimeLimiterConfig.custom()
-            .timeoutDuration(Duration.ofMillis(timeoutDuration))
-            .cancelRunningFuture(cancelRunningFuture)
-            .build()
+        val config =
+            TimeLimiterConfig
+                .custom()
+                .timeoutDuration(Duration.ofMillis(timeoutDuration))
+                .cancelRunningFuture(cancelRunningFuture)
+                .build()
 
         return registry.timeLimiter(name, config)
     }
@@ -79,15 +80,14 @@ class RedisTimeLimiterImpl<T>(
     @Suppress("UNCHECKED_CAST")
     override fun wrap(client: T): T {
         val timeLimiter = createTimeLimiter()
-        
+
         // For now, we'll return the client as-is
         // In a real implementation, we would create a dynamic proxy or decorator
         // that wraps all methods with time limiter functionality
-        
         // This is a placeholder implementation
         // The actual implementation would depend on the specific Redis client type
         // and would require reflection or code generation to create a proper wrapper
-        
+
         return client
     }
 
