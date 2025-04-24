@@ -65,35 +65,45 @@ class RedisFailoverManagerImpl : RedisFailoverManager {
     override fun start(): RedisFailoverManager {
         if (!running) {
             running = true
+            startAllHealthChecks()
+        }
+        return this
+    }
 
-            // Start all health checks
-            val allHealthChecks = healthCheckRegistry.getAllHealthChecks()
-            for ((endpoint, healthChecks) in allHealthChecks) {
-                for (healthCheck in healthChecks) {
-                    if (healthCheck is AbstractRedisHealthCheck) {
-                        healthCheck.startAsync()
-                    }
+    /**
+     * Helper method to start all registered health checks.
+     */
+    private fun startAllHealthChecks() {
+        val allHealthChecks = healthCheckRegistry.getAllHealthChecks()
+        for ((_, healthChecks) in allHealthChecks) {
+            for (healthCheck in healthChecks) {
+                if (healthCheck is AbstractRedisHealthCheck) {
+                    healthCheck.startAsync()
                 }
             }
         }
-        return this
     }
 
     override fun stop(): RedisFailoverManager {
         if (running) {
             running = false
+            stopAllHealthChecks()
+        }
+        return this
+    }
 
-            // Stop all health checks
-            val allHealthChecks = healthCheckRegistry.getAllHealthChecks()
-            for ((endpoint, healthChecks) in allHealthChecks) {
-                for (healthCheck in healthChecks) {
-                    if (healthCheck is AbstractRedisHealthCheck) {
-                        healthCheck.stopAsync()
-                    }
+    /**
+     * Helper method to stop all registered health checks.
+     */
+    private fun stopAllHealthChecks() {
+        val allHealthChecks = healthCheckRegistry.getAllHealthChecks()
+        for ((_, healthChecks) in allHealthChecks) {
+            for (healthCheck in healthChecks) {
+                if (healthCheck is AbstractRedisHealthCheck) {
+                    healthCheck.stopAsync()
                 }
             }
         }
-        return this
     }
 
     override fun isRunning(): Boolean {
@@ -146,20 +156,12 @@ class RedisFailoverManagerImpl : RedisFailoverManager {
     }
 
     /**
-     * Gets the event bus used by this failover manager.
+     * Gets the internal components used by this failover manager.
+     * This method is primarily for testing and debugging purposes.
      *
-     * @return the event bus
+     * @return a pair of (eventBus, metricsCollector)
      */
-    fun getEventBus(): EventBus {
-        return eventBus
-    }
-
-    /**
-     * Gets the metrics collector used by this failover manager.
-     *
-     * @return the metrics collector
-     */
-    fun getMetricsCollector(): MetricsCollector {
-        return metricsCollector
+    fun getInternalComponents(): Pair<EventBus, MetricsCollector> {
+        return Pair(eventBus, metricsCollector)
     }
 }

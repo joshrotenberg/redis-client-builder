@@ -15,7 +15,7 @@ class HttpHealthCheck(
     private val expectedStatusCode: Int = 200,
     private val method: String = "GET"
 ) : AbstractRedisHealthCheck() {
-    
+
     /**
      * Executes an HTTP request to the configured URL and checks the response.
      * 
@@ -29,16 +29,19 @@ class HttpHealthCheck(
             connection.connectTimeout = timeoutMs.toInt()
             connection.readTimeout = timeoutMs.toInt()
             connection.instanceFollowRedirects = false
-            
+
             val statusCode = connection.responseCode
             statusCode == expectedStatusCode
         } catch (e: IOException) {
+            // Log the exception for debugging purposes
+            System.err.println("HTTP health check failed: ${e.message}")
+            // Return false to indicate the health check failed
             false
         } finally {
             connection?.disconnect()
         }
     }
-    
+
     /**
      * Gets the URL being checked.
      * 
@@ -47,7 +50,7 @@ class HttpHealthCheck(
     fun getUrl(): URL {
         return url
     }
-    
+
     /**
      * Gets the expected HTTP status code.
      * 
@@ -56,7 +59,7 @@ class HttpHealthCheck(
     fun getExpectedStatusCode(): Int {
         return expectedStatusCode
     }
-    
+
     companion object {
         /**
          * Creates a new HttpHealthCheck with default configuration.
@@ -76,7 +79,7 @@ class HttpHealthCheck(
                 schedulePeriod(1, TimeUnit.MINUTES)
             }
         }
-        
+
         /**
          * Creates a new HttpHealthCheck with default configuration.
          * 

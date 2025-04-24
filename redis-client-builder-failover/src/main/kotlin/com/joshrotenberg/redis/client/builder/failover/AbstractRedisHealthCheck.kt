@@ -3,6 +3,7 @@ package com.joshrotenberg.redis.client.builder.failover
 import com.google.common.util.concurrent.AbstractScheduledService
 import com.google.common.util.concurrent.Service
 import com.joshrotenberg.redis.client.builder.failover.event.*
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicLong
@@ -51,26 +52,11 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
         lastExecutionTime.set(startTime)
 
         // Publish health check started event
-        publishHealthCheckStartedEvent()
+        publishHealthCheckEvent(EventType.STARTED)
 
-        var success = false
-        var attempts = 0
-        var exception: Exception? = null
-
-        while (attempts < retries && !success) {
-            try {
-                success = doExecute()
-                if (!success && attempts < retries - 1) {
-                    Thread.sleep(retryDelayMs)
-                }
-            } catch (e: Exception) {
-                exception = e
-                if (attempts < retries - 1) {
-                    Thread.sleep(retryDelayMs)
-                }
-            }
-            attempts++
-        }
+        val result = executeWithRetries()
+        val success = result.first
+        val exception = result.second
 
         healthy.set(success)
         val responseTime = System.currentTimeMillis() - startTime
@@ -78,10 +64,47 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
 
         // Publish health check completed or failed event
         if (success) {
-            publishHealthCheckCompletedEvent(responseTime)
+            publishHealthCheckEvent(EventType.COMPLETED, responseTime)
         } else {
-            publishHealthCheckFailedEvent(exception)
+            publishHealthCheckEvent(EventType.FAILED, exception = exception)
         }
+    }
+
+    /**
+     * Helper method to execute the health check with retries.
+     * 
+     * @return a pair of (success, exception) where success is true if the health check passed,
+     *         and exception is the last exception caught (if any)
+     */
+    private fun executeWithRetries(): Pair<Boolean, Exception?> {
+        var success = false
+        var attempts = 0
+        var exception: Exception? = null
+
+        while (attempts < retries && !success) {
+            try {
+                success = doExecute()
+            } catch (e: IOException) {
+                exception = e
+            } catch (e: IllegalArgumentException) {
+                exception = e
+            } catch (e: IllegalStateException) {
+                exception = e
+            } catch (e: UnsupportedOperationException) {
+                exception = e
+            } catch (e: InterruptedException) {
+                exception = e
+            }
+
+            // If not successful and more retries are available, sleep before retrying
+            if (!success && attempts < retries - 1) {
+                Thread.sleep(retryDelayMs)
+            }
+
+            attempts++
+        }
+
+        return Pair(success, exception)
     }
 
     /**
@@ -111,26 +134,11 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
         lastExecutionTime.set(startTime)
 
         // Publish health check started event
-        publishHealthCheckStartedEvent()
+        publishHealthCheckEvent(EventType.STARTED)
 
-        var success = false
-        var attempts = 0
-        var exception: Exception? = null
-
-        while (attempts < retries && !success) {
-            try {
-                success = doExecute()
-                if (!success && attempts < retries - 1) {
-                    Thread.sleep(retryDelayMs)
-                }
-            } catch (e: Exception) {
-                exception = e
-                if (attempts < retries - 1) {
-                    Thread.sleep(retryDelayMs)
-                }
-            }
-            attempts++
-        }
+        val result = executeWithRetries()
+        val success = result.first
+        val exception = result.second
 
         healthy.set(success)
         val responseTime = System.currentTimeMillis() - startTime
@@ -138,9 +146,9 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
 
         // Publish health check completed or failed event
         if (success) {
-            publishHealthCheckCompletedEvent(responseTime)
+            publishHealthCheckEvent(EventType.COMPLETED, responseTime)
         } else {
-            publishHealthCheckFailedEvent(exception)
+            publishHealthCheckEvent(EventType.FAILED, exception = exception)
         }
 
         return isHealthy()
@@ -224,36 +232,32 @@ abstract class AbstractRedisHealthCheck : AbstractScheduledService(), RedisHealt
         return this
     }
 
+
     /**
-     * Publishes a health check started event.
+     * Enum defining the types of health check events.
      */
-    private fun publishHealthCheckStartedEvent() {
-        if (eventBus != null && host != null && port != null) {
-            val event = HealthCheckStartedEvent(host!!, port!!, this)
-            eventBus!!.publishEvent(event)
-        }
+    private enum class EventType {
+        STARTED, COMPLETED, FAILED
     }
 
     /**
-     * Publishes a health check completed event.
+     * Publishes a health check event.
      * 
-     * @param responseTime the response time of the health check in milliseconds
+     * @param eventType the type of event to publish (STARTED, COMPLETED, FAILED)
+     * @param responseTime the response time of the health check in milliseconds (for COMPLETED events)
+     * @param exception the exception that caused the failure (for FAILED events)
      */
-    private fun publishHealthCheckCompletedEvent(responseTime: Long) {
+    private fun publishHealthCheckEvent(
+        eventType: EventType,
+        responseTime: Long = 0,
+        exception: Exception? = null
+    ) {
         if (eventBus != null && host != null && port != null) {
-            val event = HealthCheckCompletedEvent(host!!, port!!, this, responseTime)
-            eventBus!!.publishEvent(event)
-        }
-    }
-
-    /**
-     * Publishes a health check failed event.
-     * 
-     * @param exception the exception that caused the failure, or null if the health check failed without an exception
-     */
-    private fun publishHealthCheckFailedEvent(exception: Exception?) {
-        if (eventBus != null && host != null && port != null) {
-            val event = HealthCheckFailedEvent(host!!, port!!, this, exception)
+            val event = when (eventType) {
+                EventType.STARTED -> HealthCheckStartedEvent(host!!, port!!, this)
+                EventType.COMPLETED -> HealthCheckCompletedEvent(host!!, port!!, this, responseTime)
+                EventType.FAILED -> HealthCheckFailedEvent(host!!, port!!, this, exception)
+            }
             eventBus!!.publishEvent(event)
         }
     }
