@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
@@ -8,6 +9,11 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/redis-client-builder-core" />
+            <option value="$PROJECT_DIR$/redis-client-builder-failover" />
+            <option value="$PROJECT_DIR$/redis-client-builder-jedis" />
+            <option value="$PROJECT_DIR$/redis-client-builder-lettuce" />
+            <option value="$PROJECT_DIR$/redis-client-builder-resilience4j" />
           </set>
         </option>
       </GradleProjectSettings>

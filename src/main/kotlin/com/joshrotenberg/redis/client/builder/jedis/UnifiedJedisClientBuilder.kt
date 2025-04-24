@@ -1,6 +1,8 @@
 package com.joshrotenberg.redis.client.builder.jedis
 
 import com.joshrotenberg.redis.client.builder.RedisClientBuilder
+import com.joshrotenberg.redis.client.builder.failover.RedisFailoverManager
+import com.joshrotenberg.redis.client.builder.failover.RedisHealthCheck
 import redis.clients.jedis.DefaultJedisClientConfig
 import redis.clients.jedis.HostAndPort
 import redis.clients.jedis.JedisClientConfig
@@ -29,6 +31,7 @@ class UnifiedJedisClientBuilder : RedisClientBuilder<UnifiedJedis> {
     private var sslSocketFactory: SSLSocketFactory? = null
     private var sslParameters: SSLParameters? = null
     private var hostnameVerifier: HostnameVerifier? = null
+    private var failoverManager: RedisFailoverManager? = null
 
     // URI for connection
     private var uri: URI? = null
@@ -154,6 +157,32 @@ class UnifiedJedisClientBuilder : RedisClientBuilder<UnifiedJedis> {
         return uri(URI.create(uri))
     }
 
+    override fun withFailover(configurer: (RedisFailoverManager) -> RedisFailoverManager): UnifiedJedisClientBuilder {
+        this.failoverManager = failoverManager?.let { configurer(it) } ?: configurer(createDefaultFailoverManager())
+        return this
+    }
+
+    override fun addEndpoint(host: String, port: Int): UnifiedJedisClientBuilder {
+        failoverManager?.addEndpoint(host, port)
+        return this
+    }
+
+    override fun registerHealthCheck(host: String, port: Int, healthCheck: RedisHealthCheck): UnifiedJedisClientBuilder {
+        failoverManager?.registerHealthCheck(host, port, healthCheck)
+        return this
+    }
+
+    override fun setSelectionStrategy(strategy: RedisFailoverManager.EndpointSelectionStrategy): UnifiedJedisClientBuilder {
+        failoverManager?.setSelectionStrategy(strategy)
+        return this
+    }
+
+    private fun createDefaultFailoverManager(): RedisFailoverManager {
+        // This should be implemented to create a default failover manager
+        // For now, we'll throw an exception if no failover manager is provided
+        throw IllegalStateException("No failover manager provided. Use withFailover() to configure a failover manager.")
+    }
+
     /**
      * Builds and returns a UnifiedJedis instance with the configured settings.
      *
@@ -171,8 +200,21 @@ class UnifiedJedisClientBuilder : RedisClientBuilder<UnifiedJedis> {
     }
 
     private fun buildDirectConnection(): UnifiedJedis {
+        // If failover manager is configured, use it to get a healthy endpoint
+        val (effectiveHost, effectivePort) = failoverManager?.let {
+            // Start the failover manager if it's not already running
+            if (!it.isRunning()) {
+                it.start()
+            }
+
+            // Get a healthy endpoint
+            it.getHealthyEndpoint()?.let { endpoint ->
+                endpoint
+            } ?: Pair(host, port) // Fall back to configured host/port if no healthy endpoint
+        } ?: Pair(host, port) // Use configured host/port if no failover manager
+
         val config = createJedisClientConfig()
-        return UnifiedJedis(HostAndPort(host, port), config)
+        return UnifiedJedis(HostAndPort(effectiveHost, effectivePort), config)
     }
 
     private fun createJedisClientConfig(): JedisClientConfig {

@@ -1,6 +1,8 @@
 package com.joshrotenberg.redis.client.builder.lettuce
 
 import com.joshrotenberg.redis.client.builder.RedisClientBuilder
+import com.joshrotenberg.redis.client.builder.failover.RedisFailoverManager
+import com.joshrotenberg.redis.client.builder.failover.RedisHealthCheck
 import io.lettuce.core.ClientOptions
 import io.lettuce.core.RedisClient
 import io.lettuce.core.RedisURI
@@ -24,6 +26,7 @@ class LettuceClientBuilder : RedisClientBuilder<RedisClient> {
     private var requestQueueSize: Int = 2147483647 // Integer.MAX_VALUE
     private var publishOnScheduler: Boolean = false
     private var disconnectedBehavior: ClientOptions.DisconnectedBehavior = ClientOptions.DisconnectedBehavior.DEFAULT
+    private var failoverManager: RedisFailoverManager? = null
 
     override fun host(host: String): LettuceClientBuilder {
         this.host = host
@@ -104,17 +107,56 @@ class LettuceClientBuilder : RedisClientBuilder<RedisClient> {
         return this
     }
 
+    override fun withFailover(configurer: (RedisFailoverManager) -> RedisFailoverManager): LettuceClientBuilder {
+        this.failoverManager = failoverManager?.let { configurer(it) } ?: configurer(createDefaultFailoverManager())
+        return this
+    }
+
+    override fun addEndpoint(host: String, port: Int): LettuceClientBuilder {
+        failoverManager?.addEndpoint(host, port)
+        return this
+    }
+
+    override fun registerHealthCheck(host: String, port: Int, healthCheck: RedisHealthCheck): LettuceClientBuilder {
+        failoverManager?.registerHealthCheck(host, port, healthCheck)
+        return this
+    }
+
+    override fun setSelectionStrategy(strategy: RedisFailoverManager.EndpointSelectionStrategy): LettuceClientBuilder {
+        failoverManager?.setSelectionStrategy(strategy)
+        return this
+    }
+
+    private fun createDefaultFailoverManager(): RedisFailoverManager {
+        // This should be implemented to create a default failover manager
+        // For now, we'll throw an exception if no failover manager is provided
+        throw IllegalStateException("No failover manager provided. Use withFailover() to configure a failover manager.")
+    }
+
     /**
      * Builds and returns a RedisClient instance with the configured settings.
      *
      * @return A configured RedisClient instance
      */
     override fun build(): RedisClient {
+        // If failover manager is configured, use it to get a healthy endpoint
+        val (effectiveHost, effectivePort) = failoverManager?.let {
+            // Start the failover manager if it's not already running
+            if (!it.isRunning()) {
+                it.start()
+            }
+
+            // Get a healthy endpoint
+            it.getHealthyEndpoint()?.let { endpoint ->
+                endpoint
+            } ?: Pair(host, port) // Fall back to configured host/port if no healthy endpoint
+        } ?: Pair(host, port) // Use configured host/port if no failover manager
+
         val redisURI =
             RedisURI
                 .builder()
-                .withHost(host)
-                .withPort(port)
+                .withHost(effectiveHost)
+                .withPort(effectivePort)
                 .withDatabase(database)
                 .withTimeout(Duration.ofMillis(connectionTimeoutMs.toLong()))
                 .apply {
