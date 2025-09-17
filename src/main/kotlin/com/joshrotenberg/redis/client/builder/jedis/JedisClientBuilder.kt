@@ -1,6 +1,8 @@
 package com.joshrotenberg.redis.client.builder.jedis
 
 import com.joshrotenberg.redis.client.builder.RedisClientBuilder
+import com.joshrotenberg.redis.client.builder.failover.RedisFailoverManager
+import com.joshrotenberg.redis.client.builder.failover.RedisHealthCheck
 import redis.clients.jedis.JedisPool
 import redis.clients.jedis.JedisPoolConfig
 import redis.clients.jedis.Protocol
@@ -27,6 +29,7 @@ class JedisClientBuilder : RedisClientBuilder<JedisPool> {
     private var timeBetweenEvictionRunsMs: Long = JedisPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS.toMillis()
     private var blockWhenExhausted: Boolean = JedisPoolConfig.DEFAULT_BLOCK_WHEN_EXHAUSTED
     private var jmxEnabled: Boolean = true // Default JMX enabled value
+    private var failoverManager: RedisFailoverManager? = null
 
     override fun host(host: String): JedisClientBuilder {
         this.host = host
@@ -162,6 +165,32 @@ class JedisClientBuilder : RedisClientBuilder<JedisPool> {
         return this
     }
 
+    override fun withFailover(configurer: (RedisFailoverManager) -> RedisFailoverManager): JedisClientBuilder {
+        this.failoverManager = failoverManager?.let { configurer(it) } ?: configurer(createDefaultFailoverManager())
+        return this
+    }
+
+    override fun addEndpoint(host: String, port: Int): JedisClientBuilder {
+        failoverManager?.addEndpoint(host, port)
+        return this
+    }
+
+    override fun registerHealthCheck(host: String, port: Int, healthCheck: RedisHealthCheck): JedisClientBuilder {
+        failoverManager?.registerHealthCheck(host, port, healthCheck)
+        return this
+    }
+
+    override fun setSelectionStrategy(strategy: RedisFailoverManager.EndpointSelectionStrategy): JedisClientBuilder {
+        failoverManager?.setSelectionStrategy(strategy)
+        return this
+    }
+
+    private fun createDefaultFailoverManager(): RedisFailoverManager {
+        // This should be implemented to create a default failover manager
+        // For now, we'll throw an exception if no failover manager is provided
+        throw IllegalStateException("No failover manager provided. Use withFailover() to configure a failover manager.")
+    }
+
     /**
      * Builds and returns a JedisPool instance with the configured settings.
      *
@@ -181,10 +210,23 @@ class JedisClientBuilder : RedisClientBuilder<JedisPool> {
                 jmxEnabled = this@JedisClientBuilder.jmxEnabled
             }
 
+        // If failover manager is configured, use it to get a healthy endpoint
+        val (effectiveHost, effectivePort) = failoverManager?.let {
+            // Start the failover manager if it's not already running
+            if (!it.isRunning()) {
+                it.start()
+            }
+
+            // Get a healthy endpoint
+            it.getHealthyEndpoint()?.let { endpoint ->
+                endpoint
+            } ?: Pair(host, port) // Fall back to configured host/port if no healthy endpoint
+        } ?: Pair(host, port) // Use configured host/port if no failover manager
+
         return JedisPool(
             poolConfig,
-            host,
-            port,
+            effectiveHost,
+            effectivePort,
             connectionTimeoutMs,
             socketTimeoutMs,
             password,

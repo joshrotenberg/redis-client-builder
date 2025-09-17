@@ -1,10 +1,10 @@
 dependencies {
     // Core module dependency
     implementation(project(":redis-client-builder-core"))
-    
+
     // Lettuce dependency
     api(libs.lettuce.core)
-    
+
     // Testing
     testImplementation(kotlin("test"))
     testImplementation(libs.junit.api)

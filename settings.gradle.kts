@@ -8,5 +8,6 @@ include(
     "redis-client-builder-core",
     "redis-client-builder-jedis",
     "redis-client-builder-lettuce",
-    "redis-client-builder-resilience4j"
+    "redis-client-builder-resilience4j",
+    "redis-client-builder-failover"
 )

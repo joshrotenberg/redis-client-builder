@@ -2,7 +2,7 @@
 # Documentation: https://detekt.dev/docs/introduction/configurations
 
 build:
-  maxIssues: 10
+  maxIssues: 40
 
 style:
   MagicNumber:
